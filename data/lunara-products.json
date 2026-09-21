@@ -1,0 +1,52 @@
+[
+  {
+    "id": "black-obsidian",
+    "name": "Black Obsidian",
+    "energy": "protection",
+    "type": "single-crystal"
+  },
+  {
+    "id": "amethyst",
+    "name": "Amethyst",
+    "energy": "healing",
+    "type": "single-crystal"
+  },
+  {
+    "id": "rose-quartz",
+    "name": "Rose Quartz",
+    "energy": "love",
+    "type": "single-crystal"
+  },
+  {
+    "id": "citrine",
+    "name": "Citrine",
+    "energy": "wealth",
+    "type": "single-crystal"
+  },
+  {
+    "id": "tigers-eye",
+    "name": "Tiger's Eye",
+    "energy": "growth",
+    "type": "single-crystal"
+  },
+  {
+    "id": "guardian-pair",
+    "name": "Guardian Pair",
+    "energy": "protection+healing",
+    "type": "bundle"
+  },
+  {
+    "id": "heart-abundance-pair",
+    "name": "Heart & Abundance Pair",
+    "energy": "love+wealth",
+    "type": "bundle"
+  },
+  {
+    "id": "mining-treasure-box",
+    "name": "Natural Stone Mining Treasure Box 350g",
+    "energy": "discovery",
+    "type": "mining-kit",
+    "cost_rmb": 29.93,
+    "weight_g": 350
+  }
+]

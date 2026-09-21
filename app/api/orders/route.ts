@@ -1,0 +1,12 @@
+import { NextResponse } from "next/server";
+import fs from "fs/promises";
+import path from "path";
+import crypto from "crypto";
+export const dynamic="force-dynamic"; export const revalidate=0; export const runtime="nodejs";
+const file=path.join(process.cwd(),"data","orders.json");
+type Order={id:string;email:string;name:string;address:string;city:string;postalCode:string;country:string;slug:string;product:string;qty:number;total:number;currency:string;status:string;createdAt:string};
+async function read():Promise<Order[]>{try{return JSON.parse(await fs.readFile(file,"utf8"))}catch{return []}}
+async function write(data:Order[]){await fs.mkdir(path.dirname(file),{recursive:true});const tmp=file+".tmp";await fs.writeFile(tmp,JSON.stringify(data,null,2));await fs.rename(tmp,file)}
+function auth(req:Request){const cookie=req.headers.get("cookie")||"";const match=cookie.match(/(?:^|; )lunara_admin=([^;]+)/);const password=process.env.LUNARA_ADMIN_PASSWORD||"LUNARA-LOCAL-2026";const token=crypto.createHash("sha256").update(`lunara:${password}`).digest("hex");return match?.[1]===token}
+export async function GET(req:Request){if(!auth(req))return NextResponse.json({error:"Unauthorized"},{status:401,headers:{"Cache-Control":"no-store"}});const orders=await read();return NextResponse.json({orders,count:orders.length},{headers:{"Cache-Control":"no-store"}})}
+export async function POST(req:Request){try{const b=await req.json();const email=String(b.email||"").trim().toLowerCase();const name=String(b.name||"").trim();const address=String(b.address||"").trim();const city=String(b.city||"").trim();const postalCode=String(b.postalCode||"").trim();const country=String(b.country||"").trim();const slug=String(b.slug||"");const product=String(b.product||"");const qty=Math.max(1,Math.min(20,Number(b.qty)||1));const total=Number(b.total)||0;if(!email.includes("@")||!name||!address||!city||!postalCode||!country||!slug||!product||total<=0)return NextResponse.json({error:"Please complete all required fields."},{status:400});const orders=await read();const order:Order={id:`LUN-${crypto.randomBytes(4).toString("hex").toUpperCase()}`,email,name,address,city,postalCode,country,slug,product,qty,total,currency:"USD",status:"demo-confirmed",createdAt:new Date().toISOString()};orders.unshift(order);await write(orders);return NextResponse.json({ok:true,order})}catch{return NextResponse.json({error:"Unable to create order."},{status:500})}}
